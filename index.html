@@ -1,0 +1,33 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Лунные равнины</title>
+<div id="err" style="display:none;position:fixed;z-index:9;left:10px;right:10px;top:30%;padding:14px;background:#7a1530ee;border-radius:14px;font-size:14px;line-height:1.4"></div>
+<script>window.showErr=t=>{const e=document.getElementById("err");e.style.display="block";e.textContent="⚠ "+t};addEventListener("error",e=>window.showErr((e.message||"ошибка загрузки")+" — проверь, что index.html, game.js и anim.js лежат в одной папке, и открой через ссылку GitHub Pages"),true)</script>
+<script type="importmap">{"imports":{"three":"https://esm.sh/three@0.160.0"}}</script>
+<style>
+:root{color-scheme:dark;--g:#ffd36e;--gl:rgba(13,22,49,.74)}*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#101b3b;color:#fff;font-family:system-ui,sans-serif;touch-action:none}
+canvas{position:fixed;inset:0;display:block}button{font:inherit;color:#fff;border:1px solid #fff5;background:#ffffff18;border-radius:14px;padding:10px 14px}
+.panel{background:var(--gl);border:1px solid #fff4;backdrop-filter:blur(10px);border-radius:16px;padding:10px 13px}
+#hud{position:fixed;z-index:3;top:max(env(safe-area-inset-top),10px);left:10px;right:10px;display:flex;justify-content:space-between;pointer-events:none}#hud button{pointer-events:auto}
+.m{height:7px;background:#fff3;border-radius:6px;margin:4px 0 7px;overflow:hidden;min-width:170px}.m i{display:block;height:100%;width:100%;background:linear-gradient(90deg,#ff718a,#ffc08b)}#sb i{background:linear-gradient(90deg,#4ce2a1,#d5ff8a)}
+#toast{position:fixed;z-index:4;top:20%;left:50%;transform:translateX(-50%);opacity:0;transition:.25s;background:#101a3be8;padding:10px 20px;border-radius:22px;border:1px solid #fff5;pointer-events:none}#toast.s{opacity:1}
+#ctl{position:fixed;z-index:3;bottom:max(env(safe-area-inset-bottom),16px);left:14px;right:14px;display:flex;justify-content:space-between;align-items:end;pointer-events:none}
+#stick{width:124px;height:124px;border-radius:50%;background:#ffffff18;border:1px solid #fff5;position:relative;pointer-events:auto;display:none}#nub{position:absolute;width:48px;height:48px;left:38px;top:38px;border-radius:50%;background:linear-gradient(135deg,#fff,#9dbfff)}
+.ac{display:flex;gap:10px;pointer-events:auto}.ac button{width:66px;height:66px;border-radius:50%;padding:4px;background:#182b56dd}.ac .b{width:80px;height:80px;background:#69465bdd;border-color:#ffd36e99}
+@media(pointer:coarse){#stick{display:block}#hp2{display:none}}
+#boot{position:fixed;z-index:8;left:14px;right:14px;bottom:max(env(safe-area-inset-bottom),12px);padding:9px 13px;background:#0b1431f2;border:1px solid #ffd36e77;border-radius:14px;font-size:14px;text-align:center}#boot .m{margin:6px 0 0;min-width:0}#boot i{background:linear-gradient(90deg,#ffb45e,#ff6d76);transition:width .15s}.bx{padding-bottom:84px!important}
+#menu{position:fixed;z-index:5;inset:0;display:flex;align-items:flex-end;justify-content:center;background:linear-gradient(0deg,#071027ee 5%,#07102700 65%);overflow:auto}
+.bx{width:min(620px,96vw);padding:16px 16px 22px;text-align:center}h1{font:400 clamp(34px,8vw,56px)/1 Georgia,serif;margin:0 0 8px;background:linear-gradient(90deg,#fff,#ffd36e,#a9caff);color:transparent;background-clip:text}
+#cards,#qual{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:9px 0}.card{min-width:120px;background:var(--gl)}.card i{display:block;font-style:normal;font-size:26px}.on{border-color:var(--g);background:#ffd36e30}
+.pr{background:linear-gradient(135deg,#ffb45e,#ff6d76);border:0;font-size:18px;font-weight:700;padding:13px 38px;border-radius:30px;margin-top:8px}.pr:disabled{opacity:.5}
+label{font-size:13px;opacity:.85;display:block;margin-top:6px}input[type=range]{width:70%}#ld{min-height:20px;font-size:13px;color:#ffd36e}
+</style></head><body>
+<div id="hud"><div class="panel">💎 <b id="gems">0</b>/8 &nbsp;👾 <b id="kills">0</b><div style="font-size:12px;opacity:.8;margin-top:6px">Здоровье</div><div class="m"><i id="hp"></i></div><div style="font-size:12px;opacity:.8">Выносливость</div><div class="m" id="sb"><i id="st"></i></div></div><button class="panel" id="pause">Ⅱ</button></div>
+<div id="toast"></div>
+<div id="ctl"><div id="stick"><div id="nub"></div></div><div class="ac"><button id="jump">⤒</button><button id="skill">✦</button><button class="b" id="attack">⚔</button></div></div>
+<div id="menu"><div class="bx"><h1>Лунные равнины</h1>
+<div id="cards"></div><div id="ld"></div>
+<label>Качество графики</label><div id="qual"></div>
+<label>Зум камеры (ближе ↔ дальше)</label><input type="range" id="zoom" min="1.6" max="8" step=".1" value="3.2">
+<div id="hp2" style="font-size:12px;opacity:.6;margin-top:6px">WASD · Shift бег · Пробел прыжок · J удар · E навык · мышь/колесо — камера</div>
+<button class="pr" id="start" disabled>Начать игру</button></div></div>
+<div id="boot"><span id="bt">Загрузка библиотек…</span><div class="m"><i id="bi" style="width:3%"></i></div></div>
+<script type="module" src="game.js"></script></body></html>
